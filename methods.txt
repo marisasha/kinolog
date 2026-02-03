@@ -1,0 +1,28 @@
+auth:
+    sign-in/ [POST]
+    sign-up/ [POST]
+    token-refresh/ [POST]
+
+api/:
+    movies/:
+        add/ [POST]
+        delete/ [DELETE]
+        /[GET]
+        :id/ [GET]
+        status/change/ [POST]
+
+        ai/search/ [GET]
+    
+    friends/:
+        add [POST]
+        delete [DELETE]
+        accept [PUT]
+        refuse [DELETE]
+
+        / [GET]
+        :id/ [GET]
+
+
+
+
+

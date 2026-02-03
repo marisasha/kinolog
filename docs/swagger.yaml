@@ -1,0 +1,81 @@
+basePath: /
+definitions:
+  kinolog.User:
+    properties:
+      avatar_url:
+        type: string
+      email:
+        type: string
+      first_name:
+        type: string
+      last_name:
+        type: string
+      password_hash:
+        type: string
+      registered_date:
+        type: string
+    required:
+    - email
+    - first_name
+    - last_name
+    - password_hash
+    - registered_date
+    type: object
+host: localhost:8000
+info:
+  contact:
+    email: support@ttl-checker.com
+    name: API Support
+  description: API для кино заметок
+  license:
+    name: Apache 2.0
+    url: http://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfService: http://swagger.io/terms/
+  title: TTL Kinolog API
+  version: "1.0"
+paths:
+  /auth/sign-in:
+    post:
+      consumes:
+      - application/json
+      description: Проверка прав пользователя
+      operationId: sign-in
+      parameters:
+      - description: Данные пользователя
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/kinolog.User'
+      produces:
+      - application/json
+      responses: {}
+      summary: Аутентификация пользователя
+      tags:
+      - auth
+  /auth/sign-up:
+    post:
+      consumes:
+      - application/json
+      description: Создание нового пользователя
+      operationId: sign-up
+      parameters:
+      - description: Данные пользователя
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/kinolog.User'
+      produces:
+      - application/json
+      responses: {}
+      summary: Регистрация пользователя
+      tags:
+      - auth
+securityDefinitions:
+  ApiKeyAuth:
+    description: 'Введите: Bearer {token}'
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
