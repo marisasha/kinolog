@@ -23,6 +23,92 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/api/movies/": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Посмотреть все фильмы пользователя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "movies"
+                ],
+                "summary": "Посмотреть все фильмы",
+                "operationId": "get-movies",
+                "responses": {}
+            }
+        },
+        "/api/movies/add": {
+            "post": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Добавляет новое кино",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "movies"
+                ],
+                "summary": "Добавить кино",
+                "operationId": "add-movie",
+                "parameters": [
+                    {
+                        "description": "Информация о кино",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/models.Movie"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/api/movies/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Посмотреть фильм пользователя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "movies"
+                ],
+                "summary": "Посмотреть фильм",
+                "operationId": "get-movie",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id movie",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/auth/sign-in": {
             "post": {
                 "description": "Проверка прав пользователя",
@@ -44,7 +130,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/kinolog.User"
+                            "$ref": "#/definitions/models.UserSignInRequest"
                         }
                     }
                 ],
@@ -72,7 +158,7 @@ const docTemplate = `{
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/kinolog.User"
+                            "$ref": "#/definitions/models.User"
                         }
                     }
                 ],
@@ -81,14 +167,92 @@ const docTemplate = `{
         }
     },
     "definitions": {
-        "kinolog.User": {
+        "models.Movie": {
+            "type": "object",
+            "required": [
+                "status",
+                "title",
+                "type",
+                "year"
+            ],
+            "properties": {
+                "actors": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/models.MovieActor"
+                    }
+                },
+                "description": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "mark": {
+                    "type": "integer",
+                    "maximum": 10,
+                    "minimum": 1
+                },
+                "poster_url": {
+                    "type": "string"
+                },
+                "review": {
+                    "type": "string"
+                },
+                "status": {
+                    "type": "string",
+                    "enum": [
+                        "watched",
+                        "planned"
+                    ]
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string",
+                    "enum": [
+                        "film",
+                        "serial"
+                    ]
+                },
+                "year": {
+                    "type": "integer"
+                }
+            }
+        },
+        "models.MovieActor": {
+            "type": "object",
+            "required": [
+                "first_name",
+                "last_name",
+                "role"
+            ],
+            "properties": {
+                "bio_url": {
+                    "type": "string"
+                },
+                "first_name": {
+                    "type": "string"
+                },
+                "id": {
+                    "type": "integer"
+                },
+                "last_name": {
+                    "type": "string"
+                },
+                "role": {
+                    "type": "string"
+                }
+            }
+        },
+        "models.User": {
             "type": "object",
             "required": [
                 "email",
                 "first_name",
                 "last_name",
-                "password_hash",
-                "registered_date"
+                "password"
             ],
             "properties": {
                 "avatar_url": {
@@ -103,11 +267,24 @@ const docTemplate = `{
                 "last_name": {
                     "type": "string"
                 },
-                "password_hash": {
+                "password": {
                     "type": "string"
                 },
                 "registered_date": {
                     "type": "string"
+                }
+            }
+        },
+        "models.UserSignInRequest": {
+            "type": "object",
+            "properties": {
+                "email": {
+                    "type": "string",
+                    "default": "marisasha228@bk.ru"
+                },
+                "password": {
+                    "type": "string",
+                    "default": "123"
                 }
             }
         }

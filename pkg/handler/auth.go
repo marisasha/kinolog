@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/marisasha/kinolog"
+	"github.com/marisasha/kinolog/pkg/models"
 )
 
 // @Summary Регистрация пользователя
@@ -13,10 +13,10 @@ import (
 // @ID sign-up
 // @Accept json
 // @Produce json
-// @Param input body kinolog.User true "Данные пользователя"
+// @Param input body models.User true "Данные пользователя"
 // @Router /auth/sign-up [post]
 func (h *Handler) signUp(c *gin.Context) {
-	var input kinolog.User
+	var input models.User
 
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())
@@ -41,10 +41,10 @@ func (h *Handler) signUp(c *gin.Context) {
 // @ID sign-in
 // @Accept json
 // @Produce json
-// @Param input body kinolog.User true "Данные пользователя"
+// @Param input body models.UserSignInRequest true "Данные пользователя"
 // @Router /auth/sign-in [post]
 func (h *Handler) signIn(c *gin.Context) {
-	var input kinolog.UserSignInRequest
+	var input models.UserSignInRequest
 
 	if err := c.BindJSON(&input); err != nil {
 		newErrorResponse(c, http.StatusBadRequest, err.Error())

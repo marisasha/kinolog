@@ -7,7 +7,10 @@ import (
 )
 
 const (
-	userTable = "users"
+	userTable      = "users"
+	movieTable     = "movie"
+	ActorTable     = "movie_actors"
+	UserMovieTable = "user_movie"
 )
 
 type Config struct {

@@ -7,7 +7,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/marisasha/kinolog"
+	"github.com/marisasha/kinolog/pkg/models"
 	"github.com/marisasha/kinolog/pkg/repository"
 )
 
@@ -30,7 +30,7 @@ func NewAuthService(repos repository.Authorization) *AuthService {
 	return &AuthService{repos: repos}
 }
 
-func (s *AuthService) CreateUser(user *kinolog.User) error {
+func (s *AuthService) CreateUser(user *models.User) error {
 	user.Password = generatePasswordHash(user.Password)
 	return s.repos.CreateUser(user)
 }

@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/marisasha/kinolog"
+	"github.com/marisasha/kinolog/pkg/models"
 )
 
 type AuthPostgres struct {
@@ -15,7 +15,7 @@ func NewAuthPostgres(db *sqlx.DB) *AuthPostgres {
 	return &AuthPostgres{db: db}
 }
 
-func (r *AuthPostgres) CreateUser(user *kinolog.User) error {
+func (r *AuthPostgres) CreateUser(user *models.User) error {
 	query := fmt.Sprintf("INSERT INTO %s (email,password_hash,first_name,last_name) VALUES ($1, $2, $3, $4) RETURNING id", userTable)
 	_, err := r.db.Exec(query, user.Email, user.Password, user.FirstName, user.LastName)
 	if err != nil {
@@ -25,9 +25,9 @@ func (r *AuthPostgres) CreateUser(user *kinolog.User) error {
 
 }
 
-func (r *AuthPostgres) GetUser(username, password string) (kinolog.User, error) {
+func (r *AuthPostgres) GetUser(username, password string) (models.User, error) {
 
-	var user kinolog.User
+	var user models.User
 
 	query := fmt.Sprintf("SELECT id FROM %s WHERE email=$1 AND password_hash=$2", userTable)
 	err := r.db.Get(&user, query, username, password)
