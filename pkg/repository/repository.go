@@ -11,9 +11,13 @@ type Authorization interface {
 }
 
 type Movies interface {
-	AddMovie(movie *models.Movie, user_id *int) error
+	AddMovie(movie *models.Movie) (int, error)
 	GetAllMovies(user_id *int) ([]*models.Movie, error)
 	GetMovie(movie_id *int) (*models.Movie, error)
+	DeleteMovie(movie_id *int) error
+	ChangeMovieStatus(user_id, movie_id *int, newStatus *string) error
+	SearchMovieInDB(title *string, year *int) (int, error)
+	AddUserMovie(user_id, movieId *int) (int, error)
 }
 
 type Repository struct {

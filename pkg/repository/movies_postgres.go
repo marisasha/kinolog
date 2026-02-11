@@ -15,10 +15,10 @@ func NewMoviePostgres(db *sqlx.DB) *MoviePostgres {
 	return &MoviePostgres{db: db}
 }
 
-func (r *MoviePostgres) AddMovie(movie *models.Movie, user_id *int) error {
+func (r *MoviePostgres) AddMovie(movie *models.Movie) (int, error) {
 	tx, err := r.db.Begin()
 	if err != nil {
-		return err
+		return 0, err
 	}
 
 	defer tx.Rollback()
@@ -27,24 +27,20 @@ func (r *MoviePostgres) AddMovie(movie *models.Movie, user_id *int) error {
 	query := fmt.Sprintf("INSERT INTO %s (type,title,year,description) VALUES ($1,$2,$3,$4) RETURNING id", movieTable)
 	row := tx.QueryRow(query, movie.Type, movie.Title, movie.Year, movie.Description)
 	if err := row.Scan(&movie_id); err != nil {
-		return err
+		return 0, err
 	}
 
 	for _, actor := range movie.Actors {
-		query = fmt.Sprintf("INSERT INTO %s (movie_id,role,first_name,last_name,bio_url) VALU ($1,$2,$3,$4,$5)", ActorTable)
+		query = fmt.Sprintf("INSERT INTO %s (movie_id,role,first_name,last_name,bio_url) VALUES ($1,$2,$3,$4,$5)", ActorTable)
 		_, err := tx.Exec(query, movie_id, actor.Role, actor.FirstName, actor.LastName, actor.BioUrl)
 		if err != nil {
-			return err
+			return 0, err
 		}
 	}
-
-	query = fmt.Sprintf("INSERT INTO %s (user_id,movie_id,status,mark,review) VALUES ($1,$2,$3,$4,$5)", UserMovieTable)
-	_, err = tx.Exec(query, user_id, movie_id, movie.Status, movie.Mark, movie.Review)
-	if err != nil {
-		return err
+	if err := tx.Commit(); err != nil {
+		return 0, err
 	}
-
-	return tx.Commit()
+	return movie_id, nil
 }
 func (r *MoviePostgres) GetAllMovies(user_id *int) ([]*models.Movie, error) {
 
@@ -118,4 +114,45 @@ func (r *MoviePostgres) GetMovie(movie_id *int) (*models.Movie, error) {
 	}
 	return &movie, nil
 
+}
+
+func (r *MoviePostgres) DeleteMovie(movie_id *int) error {
+	query := fmt.Sprintf("DELETE FROM %s WHERE id = $1", movieTable)
+	_, err := r.db.Exec(query, *movie_id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *MoviePostgres) ChangeMovieStatus(user_id, movie_id *int, newStatus *string) error {
+	query := fmt.Sprintf("UPDATE %s SET status=$1 WHERE user_id = $2 AND movie_id = $3", UserMovieTable)
+	_, err := r.db.Exec(query, *newStatus, *user_id, *movie_id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (r *MoviePostgres) SearchMovieInDB(title *string, year *int) (int, error) {
+	var movieId int
+	query := fmt.Sprintf("SELECT id FROM %s WHERE title=$1 AND year=$2", movieTable)
+	err := r.db.Get(&movieId, query, *title, *year)
+	if err != nil {
+		if err.Error() == "sql: no rows in result set" {
+			return 0, nil
+		}
+		return 0, err
+	}
+	return movieId, nil
+}
+
+func (r *MoviePostgres) AddUserMovie(user_id, movieId *int) (int, error) {
+	var userMovieId int
+	query := fmt.Sprintf("INSERT INTO %s (user_id,movie_id) VALUES ($1,$2) RETURNING ID", UserMovieTable)
+	row := r.db.QueryRow(query, *user_id, *movieId)
+	if err := row.Scan(&userMovieId); err != nil {
+		return 0, err
+	}
+	return userMovieId, nil
 }
