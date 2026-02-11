@@ -2,68 +2,14 @@ basePath: /
 definitions:
   handler.changeMovieStatusRequest:
     properties:
+      mark:
+        type: integer
       movie_id:
         type: integer
-      status:
-        type: string
-    type: object
-  models.Movie:
-    properties:
-      actors:
-        items:
-          $ref: '#/definitions/models.MovieActor'
-        type: array
-      description:
-        type: string
-      id:
-        type: integer
-      mark:
-        maximum: 10
-        minimum: 1
-        type: integer
-      poster_url:
-        type: string
       review:
         type: string
       status:
-        enum:
-        - watched
-        - planned
         type: string
-      title:
-        type: string
-      type:
-        enum:
-        - film
-        - serial
-        type: string
-      year:
-        type: integer
-    required:
-    - status
-    - title
-    - type
-    - year
-    type: object
-  models.MovieActor:
-    properties:
-      bio_url:
-        type: string
-      first_name:
-        type: string
-      id:
-        type: integer
-      last_name:
-        type: string
-      role:
-        enum:
-        - actor
-        - director
-        type: string
-    required:
-    - first_name
-    - last_name
-    - role
     type: object
   models.User:
     properties:
@@ -139,27 +85,6 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Посмотреть фильм
-      tags:
-      - movies
-  /api/movies/add:
-    post:
-      consumes:
-      - application/json
-      description: Добавляет новое кино
-      operationId: add-movie
-      parameters:
-      - description: Информация о кино
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/models.Movie'
-      produces:
-      - application/json
-      responses: {}
-      security:
-      - ApiKeyAuth: []
-      summary: Добавить кино
       tags:
       - movies
   /api/movies/ai/search:

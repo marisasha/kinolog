@@ -17,6 +17,8 @@ type getMovieResponse struct {
 type changeMovieStatusRequest struct {
 	MovieId int    `json:"movie_id"`
 	Status  string `json:"status"`
+	Mark    int    `json:"mark"`
+	Review  string `json:"review"`
 }
 
 // @Summary Посмотреть все фильмы
@@ -93,50 +95,16 @@ func (h *Handler) getMovieInformation(c *gin.Context) {
 		newErrorResponse(c, http.StatusBadGateway, err.Error())
 	}
 
-	userMovieId, err := h.services.Movies.SearchMovie(&title, &year, &user_id)
+	movie, err := h.services.Movies.SearchMovie(&title, &year, &user_id)
 	if err != nil {
 		newErrorResponse(c, http.StatusBadGateway, err.Error())
 	}
 
-	c.JSON(http.StatusCreated, map[string]int{
-		"userMovieId": userMovieId,
+	c.JSON(http.StatusCreated, getMovieResponse{
+		Data: movie,
 	})
 
 }
-
-// @Summary Добавить кино
-// @Tags movies
-// @Description Добавляет новое кино
-// @ID add-movie
-// @Accept json
-// @Produce json
-// @Param request body models.Movie true "Информация о кино"
-// @Security ApiKeyAuth
-// @Router /api/movies/add [post]
-// func (h *Handler) addMovie(c *gin.Context) {
-// 	var input models.Movie
-
-// 	user_id, err := getUserId(c)
-// 	if err != nil {
-// 		return
-// 	}
-
-// 	if err := c.BindJSON(&input); err != nil {
-// 		newErrorResponse(c, http.StatusBadRequest, err.Error())
-// 		return
-// 	}
-
-// 	err = h.services.Movies.AddMovie(&input)
-// 	if err != nil {
-// 		newErrorResponse(c, http.StatusInternalServerError, err.Error())
-// 		return
-// 	}
-
-// 	c.JSON(http.StatusCreated, map[string]string{
-// 		"message": "movie sucsuccessfully created",
-// 	})
-
-// }
 
 // @Summary Обновить статус кино
 // @Tags movies
@@ -160,7 +128,7 @@ func (h *Handler) changeMovieStatus(c *gin.Context) {
 		return
 	}
 
-	err = h.services.Movies.ChangeMovieStatus(&user_id, &input.MovieId, &input.Status)
+	err = h.services.Movies.ChangeMovieStatus(&user_id, &input.MovieId, &input.Mark, &input.Status, &input.Review)
 	if err != nil {
 		newErrorResponse(c, http.StatusBadGateway, err.Error())
 	}

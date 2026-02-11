@@ -35,10 +35,3 @@ func (r *AuthPostgres) GetUser(username, password string) (models.User, error) {
 	return user, err
 
 }
-
-// {
-//   "email": "marisasha228@bk.ru",
-//   "first_name": "Александр",
-//   "last_name": "Маринушкин",
-//   "password_hash": "123",
-// }

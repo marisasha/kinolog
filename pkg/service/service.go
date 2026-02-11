@@ -12,12 +12,11 @@ type Authorization interface {
 }
 
 type Movies interface {
-	// AddMovie(movie *models.Movie) error
-	GetAllMovies(user_id *int) ([]*models.Movie, error)
+	GetAllMovies(userId *int) ([]*models.Movie, error)
 	GetMovie(movie_id *int) (*models.Movie, error)
 	DeleteMovie(movie_id *int) error
-	ChangeMovieStatus(user_id, movie_id *int, newStatus *string) error
-	SearchMovie(title *string, year, user_id *int) (int, error)
+	ChangeMovieStatus(userId, movieId, mark *int, newStatus, review *string) error
+	SearchMovie(title *string, year, user_id *int) (*models.Movie, error)
 }
 
 type Service struct {

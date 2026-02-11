@@ -45,39 +45,6 @@ const docTemplate = `{
                 "responses": {}
             }
         },
-        "/api/movies/add": {
-            "post": {
-                "security": [
-                    {
-                        "ApiKeyAuth": []
-                    }
-                ],
-                "description": "Добавляет новое кино",
-                "consumes": [
-                    "application/json"
-                ],
-                "produces": [
-                    "application/json"
-                ],
-                "tags": [
-                    "movies"
-                ],
-                "summary": "Добавить кино",
-                "operationId": "add-movie",
-                "parameters": [
-                    {
-                        "description": "Информация о кино",
-                        "name": "request",
-                        "in": "body",
-                        "required": true,
-                        "schema": {
-                            "$ref": "#/definitions/models.Movie"
-                        }
-                    }
-                ],
-                "responses": {}
-            }
-        },
         "/api/movies/ai/search": {
             "get": {
                 "security": [
@@ -270,94 +237,17 @@ const docTemplate = `{
         "handler.changeMovieStatusRequest": {
             "type": "object",
             "properties": {
+                "mark": {
+                    "type": "integer"
+                },
                 "movie_id": {
                     "type": "integer"
-                },
-                "status": {
-                    "type": "string"
-                }
-            }
-        },
-        "models.Movie": {
-            "type": "object",
-            "required": [
-                "status",
-                "title",
-                "type",
-                "year"
-            ],
-            "properties": {
-                "actors": {
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/models.MovieActor"
-                    }
-                },
-                "description": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "mark": {
-                    "type": "integer",
-                    "maximum": 10,
-                    "minimum": 1
-                },
-                "poster_url": {
-                    "type": "string"
                 },
                 "review": {
                     "type": "string"
                 },
                 "status": {
-                    "type": "string",
-                    "enum": [
-                        "watched",
-                        "planned"
-                    ]
-                },
-                "title": {
                     "type": "string"
-                },
-                "type": {
-                    "type": "string",
-                    "enum": [
-                        "film",
-                        "serial"
-                    ]
-                },
-                "year": {
-                    "type": "integer"
-                }
-            }
-        },
-        "models.MovieActor": {
-            "type": "object",
-            "required": [
-                "first_name",
-                "last_name",
-                "role"
-            ],
-            "properties": {
-                "bio_url": {
-                    "type": "string"
-                },
-                "first_name": {
-                    "type": "string"
-                },
-                "id": {
-                    "type": "integer"
-                },
-                "last_name": {
-                    "type": "string"
-                },
-                "role": {
-                    "type": "string",
-                    "enum": [
-                        "actor",
-                        "director"
-                    ]
                 }
             }
         },

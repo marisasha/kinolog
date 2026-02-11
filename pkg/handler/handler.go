@@ -34,7 +34,6 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			movies.GET("/", h.getAllMovies)
 			movies.GET("/:id", h.getMovie)
 			movies.GET("/ai/search", h.getMovieInformation)
-			// movies.POST("/add", h.addMovie)
 			movies.PUT("/status/change", h.changeMovieStatus)
 			movies.DELETE("/delete/:id", h.deleteMovie)
 		}

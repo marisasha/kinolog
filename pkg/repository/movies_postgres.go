@@ -23,16 +23,16 @@ func (r *MoviePostgres) AddMovie(movie *models.Movie) (int, error) {
 
 	defer tx.Rollback()
 
-	var movie_id int
+	var movieId int
 	query := fmt.Sprintf("INSERT INTO %s (type,title,year,description) VALUES ($1,$2,$3,$4) RETURNING id", movieTable)
 	row := tx.QueryRow(query, movie.Type, movie.Title, movie.Year, movie.Description)
-	if err := row.Scan(&movie_id); err != nil {
+	if err := row.Scan(&movieId); err != nil {
 		return 0, err
 	}
 
 	for _, actor := range movie.Actors {
 		query = fmt.Sprintf("INSERT INTO %s (movie_id,role,first_name,last_name,bio_url) VALUES ($1,$2,$3,$4,$5)", ActorTable)
-		_, err := tx.Exec(query, movie_id, actor.Role, actor.FirstName, actor.LastName, actor.BioUrl)
+		_, err := tx.Exec(query, movieId, actor.Role, actor.FirstName, actor.LastName, actor.BioUrl)
 		if err != nil {
 			return 0, err
 		}
@@ -40,9 +40,9 @@ func (r *MoviePostgres) AddMovie(movie *models.Movie) (int, error) {
 	if err := tx.Commit(); err != nil {
 		return 0, err
 	}
-	return movie_id, nil
+	return movieId, nil
 }
-func (r *MoviePostgres) GetAllMovies(user_id *int) ([]*models.Movie, error) {
+func (r *MoviePostgres) GetAllMovies(userId *int) ([]*models.Movie, error) {
 
 	var movies []*models.Movie
 
@@ -62,7 +62,7 @@ func (r *MoviePostgres) GetAllMovies(user_id *int) ([]*models.Movie, error) {
         WHERE um.user_id = $1
         ORDER BY m.id`, movieTable, UserMovieTable)
 
-	err := r.db.Select(&movies, query, *user_id)
+	err := r.db.Select(&movies, query, *userId)
 	if err != nil {
 		return nil, err
 	}
@@ -116,18 +116,18 @@ func (r *MoviePostgres) GetMovie(movie_id *int) (*models.Movie, error) {
 
 }
 
-func (r *MoviePostgres) DeleteMovie(movie_id *int) error {
+func (r *MoviePostgres) DeleteMovie(movieId *int) error {
 	query := fmt.Sprintf("DELETE FROM %s WHERE id = $1", movieTable)
-	_, err := r.db.Exec(query, *movie_id)
+	_, err := r.db.Exec(query, *movieId)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *MoviePostgres) ChangeMovieStatus(user_id, movie_id *int, newStatus *string) error {
-	query := fmt.Sprintf("UPDATE %s SET status=$1 WHERE user_id = $2 AND movie_id = $3", UserMovieTable)
-	_, err := r.db.Exec(query, *newStatus, *user_id, *movie_id)
+func (r *MoviePostgres) ChangeMovieStatus(userId, movieId, mark *int, newStatus, review *string) error {
+	query := fmt.Sprintf("UPDATE %s SET status=$1 ,mark=$2 ,review=$3 WHERE user_id = $4 AND movie_id = $5", UserMovieTable)
+	_, err := r.db.Exec(query, *newStatus, *mark, *review, *userId, *movieId)
 	if err != nil {
 		return err
 	}
@@ -147,12 +147,12 @@ func (r *MoviePostgres) SearchMovieInDB(title *string, year *int) (int, error) {
 	return movieId, nil
 }
 
-func (r *MoviePostgres) AddUserMovie(user_id, movieId *int) (int, error) {
+func (r *MoviePostgres) AddUserMovie(userId, movieId *int) error {
 	var userMovieId int
 	query := fmt.Sprintf("INSERT INTO %s (user_id,movie_id) VALUES ($1,$2) RETURNING ID", UserMovieTable)
-	row := r.db.QueryRow(query, *user_id, *movieId)
+	row := r.db.QueryRow(query, *userId, *movieId)
 	if err := row.Scan(&userMovieId); err != nil {
-		return 0, err
+		return err
 	}
-	return userMovieId, nil
+	return nil
 }
