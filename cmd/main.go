@@ -6,7 +6,6 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
 	"github.com/marisasha/kinolog"
 	_ "github.com/marisasha/kinolog/docs"
@@ -43,9 +42,9 @@ func main() {
 		logrus.Fatalf("error with initializing configs: %s", err.Error())
 	}
 
-	if err := godotenv.Load(); err != nil {
-		logrus.Fatalf("error with loading .env: %s", err.Error())
-	}
+	// if err := godotenv.Load(); err != nil {
+	// 	logrus.Fatalf("error with loading .env: %s", err.Error())
+	// }
 
 	db, err := repository.NewPostgresDB(repository.Config{
 		Host:     os.Getenv("DB_HOST"),
