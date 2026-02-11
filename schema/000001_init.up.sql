@@ -1,4 +1,4 @@
-CREATE TYPE media_type AS ENUM ('film', 'series');
+CREATE TYPE media_type AS ENUM ('film', 'serial');
 CREATE TYPE watch_status AS ENUM ('planned','watched');
 CREATE TYPE role_type AS ENUM ('actor', 'director');
 

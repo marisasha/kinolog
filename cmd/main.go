@@ -37,6 +37,7 @@ import (
 // @description Введите: Bearer {token}
 
 func main() {
+
 	logrus.SetFormatter(new(logrus.JSONFormatter))
 	if err := initConfig(); err != nil {
 		logrus.Fatalf("error with initializing configs: %s", err.Error())

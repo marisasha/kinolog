@@ -78,6 +78,106 @@ const docTemplate = `{
                 "responses": {}
             }
         },
+        "/api/movies/ai/search": {
+            "get": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Найти фильм",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "movies"
+                ],
+                "summary": "Найти фильм",
+                "operationId": "search-movie",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "Название фильма",
+                        "name": "title",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Год выпуска",
+                        "name": "year",
+                        "in": "query"
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/api/movies/delete/{id}": {
+            "delete": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Посмотреть фильм пользователя",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "movies"
+                ],
+                "summary": "Удалить фильм",
+                "operationId": "delete-movie",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Id movie",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {}
+            }
+        },
+        "/api/movies/status/change": {
+            "put": {
+                "security": [
+                    {
+                        "ApiKeyAuth": []
+                    }
+                ],
+                "description": "Обновляет статус  кино",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "movies"
+                ],
+                "summary": "Обновить статус кино",
+                "operationId": "update-status-movie",
+                "parameters": [
+                    {
+                        "description": "Id movie and status",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/handler.changeMovieStatusRequest"
+                        }
+                    }
+                ],
+                "responses": {}
+            }
+        },
         "/api/movies/{id}": {
             "get": {
                 "security": [
@@ -167,6 +267,17 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "handler.changeMovieStatusRequest": {
+            "type": "object",
+            "properties": {
+                "movie_id": {
+                    "type": "integer"
+                },
+                "status": {
+                    "type": "string"
+                }
+            }
+        },
         "models.Movie": {
             "type": "object",
             "required": [
@@ -242,7 +353,11 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "role": {
-                    "type": "string"
+                    "type": "string",
+                    "enum": [
+                        "actor",
+                        "director"
+                    ]
                 }
             }
         },

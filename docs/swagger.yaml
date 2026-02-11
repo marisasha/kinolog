@@ -1,5 +1,12 @@
 basePath: /
 definitions:
+  handler.changeMovieStatusRequest:
+    properties:
+      movie_id:
+        type: integer
+      status:
+        type: string
+    type: object
   models.Movie:
     properties:
       actors:
@@ -49,6 +56,9 @@ definitions:
       last_name:
         type: string
       role:
+        enum:
+        - actor
+        - director
         type: string
     required:
     - first_name
@@ -150,6 +160,70 @@ paths:
       security:
       - ApiKeyAuth: []
       summary: Добавить кино
+      tags:
+      - movies
+  /api/movies/ai/search:
+    get:
+      consumes:
+      - application/json
+      description: Найти фильм
+      operationId: search-movie
+      parameters:
+      - description: Название фильма
+        in: query
+        name: title
+        type: string
+      - description: Год выпуска
+        in: query
+        name: year
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Найти фильм
+      tags:
+      - movies
+  /api/movies/delete/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Посмотреть фильм пользователя
+      operationId: delete-movie
+      parameters:
+      - description: Id movie
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Удалить фильм
+      tags:
+      - movies
+  /api/movies/status/change:
+    put:
+      consumes:
+      - application/json
+      description: Обновляет статус  кино
+      operationId: update-status-movie
+      parameters:
+      - description: Id movie and status
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.changeMovieStatusRequest'
+      produces:
+      - application/json
+      responses: {}
+      security:
+      - ApiKeyAuth: []
+      summary: Обновить статус кино
       tags:
       - movies
   /auth/sign-in:
