@@ -29,8 +29,8 @@ db:
   host: "db"
   port: "5432"
   username: "postgres"
-  password: "2425"
-  dbname: "kinolog_db"
+  password: "postgres"
+  dbname: "kinolog"
   sslmode: "disable"
 
 ai:
