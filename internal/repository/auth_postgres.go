@@ -16,7 +16,7 @@ func NewAuthPostgres(db *sqlx.DB) *AuthPostgres {
 }
 
 func (r *AuthPostgres) CreateUser(user *models.User) error {
-	query := fmt.Sprintf("INSERT INTO %s (email,password_hash,first_name,last_name) VALUES ($1, $2, $3, $4) RETURNING id", userTable)
+	query := fmt.Sprintf("INSERT INTO %s (email,password_hash,first_name,last_name) VALUES ($1, $2, $3, $4)", userTable)
 	_, err := r.db.Exec(query, user.Email, user.Password, user.FirstName, user.LastName)
 	if err != nil {
 		return err

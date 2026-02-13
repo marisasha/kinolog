@@ -149,7 +149,7 @@ func (r *MoviePostgres) SearchMovieInDB(title *string, year *int) (int, error) {
 
 func (r *MoviePostgres) AddUserMovie(userId, movieId *int) error {
 	var userMovieId int
-	query := fmt.Sprintf("INSERT INTO %s (user_id,movie_id) VALUES ($1,$2) RETURNING ID", UserMovieTable)
+	query := fmt.Sprintf("INSERT INTO %s (user_id,movie_id) VALUES ($1,$2)", UserMovieTable)
 	row := r.db.QueryRow(query, *userId, *movieId)
 	if err := row.Scan(&userMovieId); err != nil {
 		return err
