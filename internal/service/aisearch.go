@@ -6,14 +6,15 @@ import (
 	"fmt"
 	"io"
 	"net/http"
-	"os"
 	"strings"
 
-	"github.com/marisasha/kinolog/pkg/models"
+	"github.com/spf13/viper"
+
+	"github.com/marisasha/kinolog/internal/models"
 )
 
 func GetMovieInfoFromAI(title *string, year *int) (*models.Movie, error) {
-	apiKey := os.Getenv("GROQ_API_KEY")
+	apiKey := viper.GetString("ai.key")
 
 	prompt := fmt.Sprintf(`Найди информацию о фильме или сериале "%s" %d.
 Верни СТРОГО JSON без пояснений и без обратных кавычек :
@@ -50,10 +51,10 @@ func GetMovieInfoFromAI(title *string, year *int) (*models.Movie, error) {
 		Actors      []ActorResponse `json:"actors"`
 	}
 
-	url := os.Getenv("AI_URL") // Groq api url
+	url := viper.GetString("ai.url")
 
 	requestBody := map[string]interface{}{
-		"model": os.Getenv("AI_MODEL"), //Groq api model
+		"model": viper.GetString("ai.model"),
 		"messages": []map[string]string{
 			{
 				"role":    "user",

@@ -21,7 +21,7 @@ RUN apk add --no-cache ca-certificates
 
 COPY --from=builder /app/app .
 COPY --from=builder /app/configs ./configs
-COPY --from=builder /app/schema ./schema
+COPY --from=builder /app/migrations ./migrations
 COPY --from=builder /app/docs ./docs
 
 EXPOSE 8000

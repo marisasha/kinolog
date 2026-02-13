@@ -1,4 +1,4 @@
-package kinolog
+package httpserver
 
 import (
 	"context"

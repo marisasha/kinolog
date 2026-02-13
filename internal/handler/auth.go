@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/marisasha/kinolog/pkg/models"
+	"github.com/marisasha/kinolog/internal/models"
 )
 
 // @Summary Регистрация пользователя

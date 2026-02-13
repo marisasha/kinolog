@@ -7,8 +7,8 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/marisasha/kinolog/pkg/models"
-	"github.com/marisasha/kinolog/pkg/repository"
+	"github.com/marisasha/kinolog/internal/models"
+	"github.com/marisasha/kinolog/internal/repository"
 )
 
 const (

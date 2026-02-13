@@ -1,4 +1,3 @@
-version: "3.9"
 
 services:
   web:
@@ -16,16 +15,14 @@ services:
   db:
     image: postgres:17-alpine
     container_name: db
-    env_file:
-      - .env
-    environment:
-      POSTGRES_USER: ${DB_USERNAME}
-      POSTGRES_PASSWORD: ${DB_PASSWORD}
-      POSTGRES_DB: ${DB_NAME}
     ports:
       - "5433:5432" 
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${DB_USERNAME} -d ${DB_NAME}"]
       interval: 5s
@@ -40,7 +37,7 @@ services:
       db:
         condition: service_healthy
     volumes:
-      - ./schema:/migrations
+      - ./migrations:/migrations
     entrypoint: [
       "migrate",
       "-path", "/migrations",

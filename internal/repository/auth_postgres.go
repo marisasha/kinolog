@@ -4,7 +4,7 @@ import (
 	"fmt"
 
 	"github.com/jmoiron/sqlx"
-	"github.com/marisasha/kinolog/pkg/models"
+	"github.com/marisasha/kinolog/internal/models"
 )
 
 type AuthPostgres struct {

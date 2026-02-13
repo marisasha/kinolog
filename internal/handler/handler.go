@@ -2,7 +2,7 @@ package handler
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/marisasha/kinolog/pkg/service"
+	"github.com/marisasha/kinolog/internal/service"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 
@@ -18,9 +18,12 @@ func NewHandler(services *service.Service) *Handler {
 }
 
 func (h *Handler) InitRoutes() *gin.Engine {
+
 	router := gin.New()
 
+	router.Use(h.loggingMiddleware)
 	router.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	auth := router.Group("/auth")
 	{
 		auth.POST("/sign-up", h.signUp)
@@ -36,16 +39,6 @@ func (h *Handler) InitRoutes() *gin.Engine {
 			movies.GET("/ai/search", h.getMovieInformation)
 			movies.PUT("/status/change", h.changeMovieStatus)
 			movies.DELETE("/delete/:id", h.deleteMovie)
-		}
-
-		friends := api.Group("/friends")
-		{
-			friends.GET("/", h.getAllFriends)
-			friends.GET("/:id", h.getFriend)
-			friends.POST("/add", h.addFriend)
-			friends.PUT("/accept", h.acceptFriendRequest)
-			friends.DELETE("/delete", h.refuseFriendRequest)
-			friends.DELETE("/refuse", h.deleteFriend)
 		}
 	}
 
