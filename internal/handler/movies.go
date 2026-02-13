@@ -30,12 +30,12 @@ type changeMovieStatusRequest struct {
 // @Security ApiKeyAuth
 // @Router /api/movies/ [get]
 func (h *Handler) getAllMovies(c *gin.Context) {
-	user_id, err := getUserId(c)
+	userId, err := getUserId(c)
 	if err != nil {
 		return
 	}
 
-	movies, err := h.services.Movies.GetAllMovies(&user_id)
+	movies, err := h.services.Movies.GetAllMovies(&userId)
 	if err != nil {
 		newErrorResponse(c, http.StatusBadGateway, err.Error())
 	}
@@ -55,12 +55,12 @@ func (h *Handler) getAllMovies(c *gin.Context) {
 // @Security ApiKeyAuth
 // @Router /api/movies/{id} [get]
 func (h *Handler) getMovie(c *gin.Context) {
-	movie_id, err := strconv.Atoi(c.Param("id"))
+	movieId, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		newErrorResponse(c, http.StatusBadGateway, err.Error())
 	}
 
-	movie, err := h.services.Movies.GetMovie(&movie_id)
+	movie, err := h.services.Movies.GetMovie(&movieId)
 	if err != nil {
 		newErrorResponse(c, http.StatusBadGateway, err.Error())
 	}
@@ -117,7 +117,7 @@ func (h *Handler) getMovieInformation(c *gin.Context) {
 // @Router /api/movies/status/change [put]
 func (h *Handler) changeMovieStatus(c *gin.Context) {
 
-	user_id, err := getUserId(c)
+	userId, err := getUserId(c)
 	if err != nil {
 		return
 	}
@@ -128,7 +128,7 @@ func (h *Handler) changeMovieStatus(c *gin.Context) {
 		return
 	}
 
-	err = h.services.Movies.ChangeMovieStatus(&user_id, &input.MovieId, &input.Mark, &input.Status, &input.Review)
+	err = h.services.Movies.ChangeMovieStatus(&userId, &input.MovieId, &input.Mark, &input.Status, &input.Review)
 	if err != nil {
 		newErrorResponse(c, http.StatusBadGateway, err.Error())
 	}
@@ -148,12 +148,12 @@ func (h *Handler) changeMovieStatus(c *gin.Context) {
 // @Security ApiKeyAuth
 // @Router /api/movies/delete/{id} [delete]
 func (h *Handler) deleteMovie(c *gin.Context) {
-	movie_id, err := strconv.Atoi(c.Param("id"))
+	movieId, err := strconv.Atoi(c.Param("id"))
 	if err != nil {
 		newErrorResponse(c, http.StatusBadGateway, err.Error())
 	}
 
-	err = h.services.Movies.DeleteMovie(&movie_id)
+	err = h.services.Movies.DeleteMovie(&movieId)
 	if err != nil {
 		newErrorResponse(c, http.StatusBadGateway, err.Error())
 	}
